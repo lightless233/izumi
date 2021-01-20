@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appenders>
+        <console name="stdout" target="SYSTEM_OUT">
+            <patternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%p] [%c{1}:%L] %m%n" />
+        </console>
+
+        <rollingfile name="file" fileName="logs/app.log" filePattern="logs/app.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="[%d{yyyy-MM-dd HH:mm:ss,SSS}] [%p] [%c{1}:%L] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy  interval="24" modulate="true"/>
+            </Policies>
+            <!--            <DirectWriteRolloverStrategy maxFiles="3"/>-->
+        </rollingfile>
+    </appenders>
+
+    <loggers>
+        <root level="debug">
+            <appenderRef ref="stdout" />
+            <!--            <appenderRef ref="file"/>-->
+        </root>
+        <logger name="Exposed" level="warn" additivity="false">
+            <appender-ref ref="stdout"/>
+        </logger>
+    </loggers>
+
+
+</configuration>
