@@ -1,0 +1,18 @@
+# 机器人的 QQ 号和密码
+botQQ: 1111
+botPassword: this_is_password
+
+# 允许机器人接受处理消息的群组
+allowedGroups: [
+    11111
+]
+
+# 机器人管理员 QQ
+admins: [
+    11111
+]
+
+# 启用的命令列表
+enabledCommands: [
+    about,
+]

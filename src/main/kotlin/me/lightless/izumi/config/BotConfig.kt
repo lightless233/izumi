@@ -10,4 +10,13 @@ class BotConfig {
     lateinit var allowedGroups: List<Long>
 
     lateinit var admins: List<Long>
+
+    // 需要加载的命令列表
+    lateinit var enabledCommands: List<String>
+
+    // 需要加载的定时器列表
+    lateinit var enabledTimers: List<String>
+
+    // 需要加载的 pipeline
+    lateinit var enabledPipelines: List<String>
 }
