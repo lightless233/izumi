@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     java
     kotlin("jvm") version "1.4.21"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
 group = "me.lightless.bot"
@@ -28,4 +29,28 @@ dependencies {
 
 tasks.withType<KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
+}
+tasks {
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+tasks {
+    named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
+        archiveBaseName.set(project.name)
+        mergeServiceFiles()
+        manifest {
+            attributes(mapOf("Main-Class" to "me.lightless.izumi.MainAppKt"))
+        }
+    }
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
+    }
 }

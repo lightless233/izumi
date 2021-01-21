@@ -7,6 +7,7 @@ import org.yaml.snakeyaml.constructor.Constructor
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.system.exitProcess
+import java.nio.file.NoSuchFileException
 
 class ConfigParser(private val filename: String) {
 
@@ -28,6 +29,7 @@ class ConfigParser(private val filename: String) {
         }
     }
 
+    @Suppress("unused")
     fun getConfig(): BotConfig {
         return parsedConfig
     }
