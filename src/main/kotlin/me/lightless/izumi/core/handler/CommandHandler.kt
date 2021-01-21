@@ -2,7 +2,7 @@ package me.lightless.izumi.core.handler
 
 import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.Constant
-import me.lightless.izumi.command.ICommand
+import me.lightless.izumi.plugin.command.ICommand
 import me.lightless.izumi.util.BotLoader
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -19,7 +19,7 @@ class CommandHandler {
         logger.info("CommandHandler init...")
 
         var enabledCommands = ApplicationContext.botConfig?.enabledCommands
-        enabledCommands = enabledCommands ?: emptyList<String>()
+        enabledCommands = enabledCommands ?: emptyList()
 
         val commandClassname = BotLoader.load(Constant.COMMAND_PACKAGE_NAME)
         logger.debug("All command classname: $commandClassname")

@@ -16,3 +16,8 @@ admins: [
 enabledCommands: [
     about,
 ]
+
+# 启用的 pipeline 列表
+enabledPipelines: [
+  repeat
+]

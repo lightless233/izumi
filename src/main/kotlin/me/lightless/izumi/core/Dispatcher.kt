@@ -2,6 +2,7 @@ package me.lightless.izumi.core
 
 import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.core.handler.CommandHandler
+import me.lightless.izumi.core.handler.MessageHandler
 import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import org.slf4j.LoggerFactory
@@ -17,6 +18,7 @@ class Dispatcher {
 
     // command handler
     private val commandHandler = CommandHandler()
+    private val messageHandler = MessageHandler()
 
     init {
         logger.info("Dispatcher start!")
@@ -43,7 +45,7 @@ class Dispatcher {
 
         when {
             isCommand(message.contentToString()) -> commandHandler.dispatch(groupMessage, group)
-            // else -> messageHandler.dispatcher(groupMessage)
+            else -> messageHandler.dispatch(groupMessage)
         }
 
     }

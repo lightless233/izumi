@@ -1,6 +1,6 @@
-package me.lightless.izumi.command.impl
+package me.lightless.izumi.plugin.command.impl
 
-import me.lightless.izumi.command.ICommand
+import me.lightless.izumi.plugin.command.ICommand
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.buildMessageChain

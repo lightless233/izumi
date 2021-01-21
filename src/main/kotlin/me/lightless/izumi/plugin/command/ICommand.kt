@@ -1,4 +1,4 @@
-package me.lightless.izumi.command
+package me.lightless.izumi.plugin.command
 
 import me.lightless.izumi.ApplicationContext
 import net.mamoe.mirai.event.events.GroupMessageEvent

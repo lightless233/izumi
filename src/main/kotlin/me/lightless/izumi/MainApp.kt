@@ -40,6 +40,7 @@ class MainApp {
             ApplicationContext.botConfig!!.botPassword
         ) {
             protocol = BotConfiguration.MiraiProtocol.ANDROID_PAD
+            fileBasedDeviceInfo("botDevice.json")
         }.alsoLogin()
 
         ApplicationContext.bot = botInstance
