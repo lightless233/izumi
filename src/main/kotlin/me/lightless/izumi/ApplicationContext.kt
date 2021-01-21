@@ -3,17 +3,28 @@ package me.lightless.izumi
 import me.lightless.izumi.config.BotConfig
 import net.mamoe.mirai.Bot
 
-class ApplicationContext {
+//class ApplicationContext {
+//
+//    companion object {
+//        // bot config
+//        var botConfig: BotConfig? = null
+//
+//        // bot instance
+//        var bot: Bot? = null
+//
+//        // current working dir
+//        var cwd: String? = null
+//    }
+//
+//}
 
-    companion object {
-        // bot config
-        var botConfig: BotConfig? = null
+object ApplicationContext  {
+    // bot config
+    var botConfig: BotConfig? = null
 
-        // bot instance
-        var bot: Bot? = null
+    // bot instance
+    var bot: Bot? = null
 
-        // current working dir
-        var cwd: String? = null
-    }
-
+    // current working dir
+    var cwd: String? = null
 }

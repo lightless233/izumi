@@ -1,11 +1,11 @@
 package me.lightless.izumi
 
-import com.sun.xml.internal.ws.client.dispatch.MessageDispatch
 import kotlinx.coroutines.runBlocking
 import me.lightless.izumi.config.ConfigParser
 import me.lightless.izumi.core.Dispatcher
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
+import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.utils.BotConfiguration
 import org.slf4j.LoggerFactory
 import kotlin.system.exitProcess
@@ -46,15 +46,10 @@ class MainApp {
 
         // 开启消息分发
         val dispatcher = Dispatcher()
-//        botInstance.
-//
-//        botInstance.subscribeGroupMessages {
-//            always {
-//                dispatcher.onGroupMessage(this)
-//            }
-//        }
+        botInstance.eventChannel.subscribeAlways<GroupMessageEvent> { event ->
+            dispatcher.onGroupMessage(event, subject)
+        }
         this.logger.info("MessageDispatcher done.")
-
 
         // 开启定时器
 

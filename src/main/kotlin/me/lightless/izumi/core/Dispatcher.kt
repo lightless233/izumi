@@ -1,6 +1,8 @@
 package me.lightless.izumi.core
 
 import me.lightless.izumi.ApplicationContext
+import me.lightless.izumi.core.handler.CommandHandler
+import net.mamoe.mirai.contact.Group
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import org.slf4j.LoggerFactory
 
@@ -12,6 +14,9 @@ class Dispatcher {
 
     // 测试是否为 command 使用的正则
     private val commandPattern = Regex("^/[a-zA-Z0-9-_.]+\\b")
+
+    // command handler
+    private val commandHandler = CommandHandler()
 
     init {
         logger.info("Dispatcher start!")
@@ -25,9 +30,8 @@ class Dispatcher {
     /**
      * 处理群组消息
      */
-    suspend fun onGroupMessage(groupMessage: GroupMessageEvent) {
+    suspend fun onGroupMessage(groupMessage: GroupMessageEvent, group: Group) {
 
-        val group = groupMessage.group
         val message = groupMessage.message
         val sender = groupMessage.sender
 
@@ -37,10 +41,10 @@ class Dispatcher {
 
         logger.debug("[$group] [$sender] $message")
 
-//        when {
-//            isCommand(message.contentToString()) -> commandHandler.dispatcher(groupMessage)
-//            else -> messageHandler.dispatcher(groupMessage)
-//        }
+        when {
+            isCommand(message.contentToString()) -> commandHandler.dispatch(groupMessage, group)
+            // else -> messageHandler.dispatcher(groupMessage)
+        }
 
     }
 

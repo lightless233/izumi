@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.buildMessageChain
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+@Suppress("unused")
 class About : ICommand {
     override val commandName: String
         get() = "about"
