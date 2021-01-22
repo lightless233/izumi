@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "me.lightless.bot"
-version = "1.0.1-SNAPSHOT"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     maven("https://dl.bintray.com/kotlin/kotlin-eap")
