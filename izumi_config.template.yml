@@ -21,3 +21,8 @@ enabledCommands: [
 enabledPipelines: [
   repeat
 ]
+
+# 启用的 timer 列表
+enabledTimers: [
+  life
+]

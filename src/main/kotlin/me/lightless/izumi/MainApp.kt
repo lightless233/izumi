@@ -3,6 +3,7 @@ package me.lightless.izumi
 import kotlinx.coroutines.runBlocking
 import me.lightless.izumi.config.ConfigParser
 import me.lightless.izumi.core.Dispatcher
+import me.lightless.izumi.plugin.timer.TimerLoader
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.event.events.GroupMessageEvent
@@ -53,6 +54,7 @@ class MainApp {
         this.logger.info("MessageDispatcher done.")
 
         // 开启定时器
+        TimerLoader.loadAndStart()
 
         logger.info("izumi start finished.")
     }
