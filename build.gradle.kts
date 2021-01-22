@@ -25,7 +25,11 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:2.13.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.13.1")
 
-    implementation("org.jetbrains.exposed", "exposed-jodatime", "0.23.1")
+    implementation("org.jetbrains.exposed:exposed-core:0.28.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.28.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.28.1")
+    implementation("org.xerial:sqlite-jdbc:3.34.0")
+    implementation("org.jetbrains.exposed", "exposed-jodatime", "0.28.1")
 }
 
 
