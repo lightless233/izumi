@@ -7,7 +7,7 @@
 - 增加喝水小助手
 - 增加虚度光阴小助手
 
-1.0.2-SNAPSHOT (UNDER WAY)
+1.0.2-SNAPSHOT (UNDER DEVELOPMENT)
 - 增加聊天记录存储功能
 - 增加龙王功能
 

@@ -4,6 +4,7 @@ import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.core.handler.CommandHandler
 import me.lightless.izumi.core.handler.MessageHandler
 import net.mamoe.mirai.contact.Group
+import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import org.slf4j.LoggerFactory
 
@@ -41,7 +42,7 @@ class Dispatcher {
             return
         }
 
-        logger.debug("[$group] [$sender] $message")
+        logger.debug("[${group.name}(${group.id})] [${sender.nameCardOrNick}(${sender.id})] $message")
 
         when {
             isCommand(message.contentToString()) -> commandHandler.dispatch(groupMessage, group)
