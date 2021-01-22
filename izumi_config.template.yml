@@ -19,10 +19,14 @@ enabledCommands: [
 
 # 启用的 pipeline 列表
 enabledPipelines: [
-  repeat
+  repeat,
+  log_message
 ]
 
 # 启用的 timer 列表
 enabledTimers: [
   life
 ]
+
+# db filename
+dbFilename: izumi.sqlite

@@ -19,4 +19,8 @@ class BotConfig {
 
     // 需要加载的 pipeline
     lateinit var enabledPipelines: List<String>
+
+    // DB 的文件路径，未来需要支持更多的数据库类型
+    // 目前仅支持 SQLite
+    lateinit var dbFilename: String
 }

@@ -3,12 +3,21 @@ package me.lightless.izumi
 import kotlinx.coroutines.runBlocking
 import me.lightless.izumi.config.ConfigParser
 import me.lightless.izumi.core.Dispatcher
+import me.lightless.izumi.dao.ChatMessage
+import me.lightless.izumi.dao.Ryuo
 import me.lightless.izumi.plugin.timer.TimerLoader
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.event.events.GroupMessageEvent
 import net.mamoe.mirai.utils.BotConfiguration
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.LoggerFactory
+import java.sql.Connection
 import kotlin.system.exitProcess
 
 class MainApp {
@@ -34,6 +43,9 @@ class MainApp {
         logger.debug("config: ${ApplicationContext.botConfig}")
 
         // connect db
+        logger.debug("Try to connect database...")
+        this.connectDatabase()
+        logger.info("Connect database finished.")
 
         // 启动 bot 实例
         val botInstance = BotFactory.newBot(
@@ -57,6 +69,24 @@ class MainApp {
         TimerLoader.loadAndStart()
 
         logger.info("izumi start finished.")
+    }
+
+    fun connectDatabase() {
+        val dbFilename = ApplicationContext.botConfig?.dbFilename
+        if (dbFilename == null) {
+            logger.error("`dbFilename` is empty, please check config file.")
+            exitProcess(-1)
+        }
+
+        // 初始化 db
+        Database.connect("jdbc:sqlite:$dbFilename", "org.sqlite.JDBC")
+        TransactionManager.manager.defaultIsolationLevel = Connection.TRANSACTION_SERIALIZABLE
+        transaction {
+            addLogger(StdOutSqlLogger)  // 添加 sql 的日志
+            SchemaUtils.create(
+                Ryuo, ChatMessage
+            )
+        }
     }
 
 }
