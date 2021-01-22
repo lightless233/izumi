@@ -1,0 +1,5 @@
+1.0.0-SNAPSHOT
+- 新版本上线
+
+1.0.1-SNAPSHOT (UNDERDEVELOPMENT)
+- 增加大拇指检测功能
