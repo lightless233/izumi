@@ -53,6 +53,7 @@ class MainApp {
             ApplicationContext.botConfig!!.botPassword
         ) {
             protocol = BotConfiguration.MiraiProtocol.ANDROID_PHONE
+            heartbeatPeriodMillis = 30 * 1000L  // 把心跳时间调整为 30 秒，尝试解决自动断线的问题
             fileBasedDeviceInfo("botDevice.json")
         }.alsoLogin()
 

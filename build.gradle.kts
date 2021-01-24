@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
 
-    api("net.mamoe", "mirai-core", "2.0.0")
+    api("net.mamoe", "mirai-core", "2.1.0")
 
     implementation("org.yaml:snakeyaml:1.27")
     implementation("org.slf4j:slf4j-api:1.7.30")
