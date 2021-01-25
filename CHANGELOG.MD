@@ -9,9 +9,10 @@
 
 1.0.2-SNAPSHOT (UNDER DEVELOPMENT)
 - 增加聊天记录存储功能
-- 增加龙王功能
+- 先上线积累数据，龙王功能放到下个版本
 
 1.0.3-SNAPSHOT (UNDER WAY)
+- 增加龙王功能
 - 增加涩图功能（公交车）
 - 增加 NSFW 功能
 
