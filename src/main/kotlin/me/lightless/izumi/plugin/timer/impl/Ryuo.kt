@@ -88,10 +88,10 @@ class Ryuo : ITimer {
     }
 }
 
-fun main() {
-    val today = LocalDate.now(DateTimeZone.forOffsetHours(8))
-    println(today.toString())
-
-    val yesterday = today.minusDays(1)
-    println(yesterday.toString())
-}
+//fun main() {
+//    val today = LocalDate.now(DateTimeZone.forOffsetHours(8))
+//    println(today.toString())
+//
+//    val yesterday = today.minusDays(1)
+//    println(yesterday.toString())
+//}

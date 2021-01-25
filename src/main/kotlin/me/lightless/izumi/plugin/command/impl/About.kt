@@ -21,7 +21,7 @@ class About : ICommand {
         logger.debug("$commandName called")
         val message = """
             |BotIzumi Project
-            |Version: 1.0.2-SNAPSHOT
+            |Version: 1.0.3-SNAPSHOT
             |
             |A QQ bot based on mirai (https://github.com/mamoe/mirai).
             |
