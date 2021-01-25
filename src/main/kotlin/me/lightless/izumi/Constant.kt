@@ -6,4 +6,5 @@ object Constant {
     const val PIPELINE_PACKAGE_NAME = "me.lightless.izumi.plugin.pipeline.impl"
     const val TIMER_PACKAGE_NAME = "me.lightless.izumi.plugin.timer.impl"
 
+    const val COLOR_IMAGE_API = "https://api.lolicon.app/setu/?size1200=true"
 }

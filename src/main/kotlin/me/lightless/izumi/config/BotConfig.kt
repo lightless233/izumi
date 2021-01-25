@@ -23,4 +23,12 @@ class BotConfig {
     // DB 的文件路径，未来需要支持更多的数据库类型
     // 目前仅支持 SQLite
     lateinit var dbFilename: String
+
+    // ColorImage 需要的配置
+    lateinit var colorImageKey: String
+
+    // socks5 代理配置
+    var useProxy by Delegates.notNull<Boolean>()
+    lateinit var proxyIp: String
+    var proxyPort by Delegates.notNull<Int>()
 }

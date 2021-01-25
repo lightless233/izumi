@@ -10,7 +10,7 @@ interface ICommand {
     val logger: Logger
     val command: List<String>
 
-    suspend fun handler(cmd: String, groupMessage: GroupMessageEvent)
+    suspend fun handler(cmd: String, event: GroupMessageEvent)
 
     fun checkRole(qq: Long): Boolean
 
