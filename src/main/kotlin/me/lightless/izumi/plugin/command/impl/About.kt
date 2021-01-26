@@ -14,7 +14,7 @@ class About : ICommand {
     override val logger: Logger
         get() = LoggerFactory.getLogger(javaClass)
     override val command: List<String>
-        get() = listOf("/about", "/version", "/help")
+        get() = listOf("/about", "/version")
 
 
     override suspend fun handler(cmd: String, event: GroupMessageEvent) {
