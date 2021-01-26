@@ -33,7 +33,7 @@ class Help:ICommand {
             | /kkp, /bgs, /bugouse - 显示涩图原图 (WIP)
             | /r18 - 涩图 R18 开关
             | /nsfw - NSFW 开关
-        """.trimIndent()
+        """.trimMargin()
 
         event.group.sendMessage(buildMessageChain {
             add(At(event.sender))
