@@ -11,12 +11,12 @@
 - 增加聊天记录存储功能
 - 先上线积累数据，龙王功能放到下个版本
 
-1.0.3-SNAPSHOT (UNDER DEVELOPMENT)
-- 增加龙王功能
+1.0.3-SNAPSHOT
 - 增加涩图功能（公交车）
 - 增加 NSFW 功能
 
-1.0.4-SNAPSHOT (UNDER WAY)
+1.0.4-SNAPSHOT (WIP)
+- 增加龙王功能
 - 增加私家车发车功能
 
 1.0.5-SNAPSHOT (UNDER WAY)
