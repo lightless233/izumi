@@ -17,7 +17,7 @@ class About : ICommand {
         get() = listOf("/about", "/version", "/help")
 
 
-    override suspend fun handler(cmd: String, groupMessage: GroupMessageEvent) {
+    override suspend fun handler(cmd: String, event: GroupMessageEvent) {
         logger.debug("$commandName called")
         val message = """
             |BotIzumi Project
@@ -34,8 +34,8 @@ class About : ICommand {
             |lightless, GeruzoniAnsasu
         """.trimMargin()
 
-        groupMessage.group.sendMessage(buildMessageChain {
-            add(At(groupMessage.sender))
+        event.group.sendMessage(buildMessageChain {
+            add(At(event.sender))
             add("\n")
             add(message)
         })

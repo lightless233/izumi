@@ -72,7 +72,7 @@ class MainApp {
         logger.info("izumi start finished.")
     }
 
-    fun connectDatabase() {
+    private fun connectDatabase() {
         val dbFilename = ApplicationContext.botConfig?.dbFilename
         if (dbFilename == null) {
             logger.error("`dbFilename` is empty, please check config file.")

@@ -30,6 +30,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.28.1")
     implementation("org.xerial:sqlite-jdbc:3.34.0")
     implementation("org.jetbrains.exposed", "exposed-jodatime", "0.28.1")
+
+    implementation("com.alibaba:fastjson:1.2.75")
 }
 
 
