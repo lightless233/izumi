@@ -8,7 +8,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 @Suppress("unused")
-class Help:ICommand {
+class Help : ICommand {
     override val commandName: String
         get() = "help"
     override val logger: Logger
@@ -41,7 +41,6 @@ class Help:ICommand {
             add(message)
         })
     }
-
 
 
 }

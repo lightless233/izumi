@@ -25,7 +25,7 @@ import java.util.*
 
 @KtorExperimentalAPI
 @Suppress("unused", "ConvertSecondaryConstructorToPrimary")
-class ColorImage() : ICommand {
+class ColorImage : ICommand {
     override val commandName: String
         get() = "color_image"
     override val logger: Logger
