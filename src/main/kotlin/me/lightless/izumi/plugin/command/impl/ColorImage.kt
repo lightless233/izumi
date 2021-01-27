@@ -19,11 +19,13 @@ import net.mamoe.mirai.message.data.buildMessageChain
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.InputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
 
 @KtorExperimentalAPI
-@Suppress("unused")
-class ColorImage : ICommand {
+@Suppress("unused", "ConvertSecondaryConstructorToPrimary")
+class ColorImage() : ICommand {
     override val commandName: String
         get() = "color_image"
     override val logger: Logger
@@ -40,6 +42,48 @@ class ColorImage : ICommand {
 
     private var latestImageUrl: String? = null
     private var latestImagePixivId: Long? = null
+
+    init {
+        this.loadSwitchConfig()
+    }
+
+    /**
+     * 检查是否存在 开关 的配置文件，如果有的话就读取文件里的开关配置
+     */
+    private fun loadSwitchConfig() {
+        val cwd = ApplicationContext.cwd ?: return
+        val content: String
+        try {
+            val switchPath = Paths.get(cwd, "switch.izumi")
+            content = Files.readString(switchPath)
+        } catch (e: Exception) {
+            this.logger.info("no switch config file found, use default config...")
+            return
+        }
+
+        val switchConfig = content.split("|")
+        val r18 = switchConfig[0]
+        val nsfw = switchConfig[1]
+        this.r18switch = r18 == "true"
+        this.nsfwSwitch = nsfw == "true"
+    }
+
+    /**
+     * 如果用户修改了开关，存到临时文件里
+     */
+    private fun saveSwitchConfig() {
+        val cwd = ApplicationContext.cwd ?: return
+        try {
+            val switchPath = Paths.get(cwd, "switch.izumi")
+            val content = this.r18switch.toString() + "|" + this.nsfwSwitch.toString()
+            Files.writeString(switchPath, content)
+        } catch (e: Exception) {
+            this.logger.warn("write switch config file failed.")
+            e.printStackTrace()
+            return
+        }
+        this.logger.debug("write switch config file success.")
+    }
 
     override suspend fun handler(cmd: String, event: GroupMessageEvent) {
         this.logger.debug("$commandName called!")
@@ -63,11 +107,13 @@ class ColorImage : ICommand {
         // 处理开关
         if (cmd in r18Commands) {
             processR18(arg, event)
+            saveSwitchConfig()
             return
         }
 
         if (cmd in nsfwCommands) {
             processNSFW(arg, event)
+            saveSwitchConfig()
             return
         }
 
