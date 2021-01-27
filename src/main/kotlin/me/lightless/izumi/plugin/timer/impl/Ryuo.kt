@@ -94,21 +94,28 @@ class Ryuo : ITimer {
                 .sortedByDescending { it.value }.associateBy({ it.key }, { it.value })
             this.logger.debug("sortedInnerMap: $sortedInnerMap")
 
-            var ryuoId = 0L
+            // 需要处理消息数量相同的情况
+            val ryuoIds = mutableListOf<Long>()
+            var maxCount = 0
             var yesterdayMessage = "昨日摸鱼：\n"
             sortedInnerMap.forEach { (t, u) ->
-                if (ryuoId == 0L) {
-                    ryuoId = t
+                if (u >= maxCount) {
+                    ryuoIds.add(t)
+                    maxCount = u.toInt()
                 }
                 yesterdayMessage += "${nicknameInnerMap[t]}($t) -> $u\n"
             }
 
             val fullMessage = buildMessageChain {
                 add("[龙王] 恭喜 ")
-                add(At(ryuoId))
+            }
+            for (rid in ryuoIds) {
+                fullMessage.plus(At(rid))
+            }
+            fullMessage.plus(buildMessageChain {
                 add(" 成为今天的龙王，快来给大家表演个喷水吧！\n")
                 add(yesterdayMessage)
-            }
+            })
 
             bot.launch {
                 bot.getGroup(allowedGroupId)?.sendMessage(fullMessage)
