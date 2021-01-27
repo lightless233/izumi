@@ -41,73 +41,10 @@ class Ryuo : ITimer {
         logger.debug("groupNumber: $allowedGroups")
 
         while (true) {
-            val datetime = DateTime()
-            val h = datetime.hourOfDay
-            val m = datetime.minuteOfHour
-
             // 每天早上 9 点 30 分，发送龙王数据
-            if (h == 9 && m == 30) {
-                val today = LocalDate.now(DateTimeZone.forOffsetHours(8))
-                val yesterday = today.minusDays(1)
-                val ryuoMap = mutableMapOf<Long, MutableMap<Long, Long>>()
-                val nicknameMap = mutableMapOf<Long, MutableMap<Long, String>>()
-
-                // 从数据库里查出来昨天的全部信息
-                val messageList = transaction {
-                    ChatMessageDAO.find {
-                        ChatMessage.createdTime less today.toDateTimeAtStartOfDay() and
-                                (ChatMessage.createdTime greaterEq yesterday.toDateTimeAtStartOfDay())
-                    }.toList()
-                }
-
-                // 计算龙王信息
-                for (msgDAO in messageList) {
-                    if (msgDAO.groupId !in ryuoMap.keys) {
-                        ryuoMap[msgDAO.groupId] = mutableMapOf()
-                        nicknameMap[msgDAO.groupId] = mutableMapOf()
-                    }
-                    val ryuoInnerMap = ryuoMap[msgDAO.groupId] ?: continue
-                    val nicknameInnerMap = nicknameMap[msgDAO.groupId] ?: continue
-
-                    if (msgDAO.qq !in ryuoInnerMap.keys) {
-                        ryuoInnerMap[msgDAO.qq] = 0
-                    } else {
-                        ryuoInnerMap[msgDAO.qq] = ryuoInnerMap[msgDAO.qq] as Long + 1
-                    }
-
-                    nicknameInnerMap[msgDAO.qq] = msgDAO.nickname
-                }
-                this.logger.debug("ryuoMap: $ryuoMap")
-
-                // 发消息
-                for (allowedGroupId in allowedGroups) {
-                    val ryuoInnerMap = ryuoMap[allowedGroupId] ?: continue
-                    val nicknameInnerMap = nicknameMap[allowedGroupId] ?: continue
-                    val sortedInnerMap = ryuoInnerMap.entries
-                        .sortedByDescending { it.value }.associateBy({ it.key }, { it.value })
-                    this.logger.debug("sortedInnerMap: $sortedInnerMap")
-
-                    var ryuoId = 0L
-                    var yesterdayMessage = "昨日摸鱼：\n"
-                    sortedInnerMap.forEach { (t, u) ->
-                        if (ryuoId == 0L) {
-                            ryuoId = t
-                        }
-                        yesterdayMessage += "${nicknameInnerMap[t]}($t) -> $u\n"
-                    }
-
-                    val fullMessage = buildMessageChain {
-                        add("[龙王] 恭喜 ")
-                        add(At(ryuoId))
-                        add(" 成为今天的龙王，快来给大家表演个喷水吧！\n")
-                        add(yesterdayMessage)
-                    }
-
-                    bot.launch {
-                        bot.getGroup(allowedGroupId)?.sendMessage(fullMessage)
-                    }
-
-                }
+            val datetime = DateTime()
+            if (datetime.hourOfDay == 9 && datetime.minuteOfHour == 30) {
+                this.doProcess(allowedGroups, bot)
                 // 多 sleep 5 秒，防止同一分钟内发两次消息
                 delay(65 * 1000)
             } else {
@@ -115,4 +52,69 @@ class Ryuo : ITimer {
             }
         }
     }
+
+    private suspend fun doProcess(allowedGroups: List<Long>, bot: Bot) {
+        val today = LocalDate.now(DateTimeZone.forOffsetHours(8))
+        val yesterday = today.minusDays(1)
+        val ryuoMap = mutableMapOf<Long, MutableMap<Long, Long>>()
+        val nicknameMap = mutableMapOf<Long, MutableMap<Long, String>>()
+
+        // 从数据库里查出来昨天的全部信息
+        val messageList = transaction {
+            ChatMessageDAO.find {
+                ChatMessage.createdTime less today.toDateTimeAtStartOfDay() and
+                        (ChatMessage.createdTime greaterEq yesterday.toDateTimeAtStartOfDay())
+            }.toList()
+        }
+
+        // 计算龙王信息
+        for (msgDAO in messageList) {
+            if (msgDAO.groupId !in ryuoMap.keys) {
+                ryuoMap[msgDAO.groupId] = mutableMapOf()
+                nicknameMap[msgDAO.groupId] = mutableMapOf()
+            }
+            val ryuoInnerMap = ryuoMap[msgDAO.groupId] ?: continue
+            val nicknameInnerMap = nicknameMap[msgDAO.groupId] ?: continue
+
+            if (msgDAO.qq !in ryuoInnerMap.keys) {
+                ryuoInnerMap[msgDAO.qq] = 0
+            } else {
+                ryuoInnerMap[msgDAO.qq] = ryuoInnerMap[msgDAO.qq] as Long + 1
+            }
+
+            nicknameInnerMap[msgDAO.qq] = msgDAO.nickname
+        }
+        this.logger.debug("ryuoMap: $ryuoMap")
+
+        // 发消息
+        for (allowedGroupId in allowedGroups) {
+            val ryuoInnerMap = ryuoMap[allowedGroupId] ?: continue
+            val nicknameInnerMap = nicknameMap[allowedGroupId] ?: continue
+            val sortedInnerMap = ryuoInnerMap.entries
+                .sortedByDescending { it.value }.associateBy({ it.key }, { it.value })
+            this.logger.debug("sortedInnerMap: $sortedInnerMap")
+
+            var ryuoId = 0L
+            var yesterdayMessage = "昨日摸鱼：\n"
+            sortedInnerMap.forEach { (t, u) ->
+                if (ryuoId == 0L) {
+                    ryuoId = t
+                }
+                yesterdayMessage += "${nicknameInnerMap[t]}($t) -> $u\n"
+            }
+
+            val fullMessage = buildMessageChain {
+                add("[龙王] 恭喜 ")
+                add(At(ryuoId))
+                add(" 成为今天的龙王，快来给大家表演个喷水吧！\n")
+                add(yesterdayMessage)
+            }
+
+            bot.launch {
+                bot.getGroup(allowedGroupId)?.sendMessage(fullMessage)
+            }
+
+        }
+    }
+
 }
