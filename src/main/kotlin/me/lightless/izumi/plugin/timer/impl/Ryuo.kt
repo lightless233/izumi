@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.dao.ChatMessage
 import me.lightless.izumi.dao.ChatMessageDAO
+import me.lightless.izumi.dao.RyuoDAO
 import me.lightless.izumi.plugin.timer.ITimer
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.message.data.At
@@ -116,6 +117,18 @@ class Ryuo : ITimer {
                 add(" 成为今天的龙王，快来给大家表演个喷水吧！\n")
                 add(yesterdayMessage)
             })
+
+            // 存起来
+            transaction {
+                for (rid in ryuoIds) {
+                    RyuoDAO.new {
+                        this.qq = rid
+                        this.nickname = nicknameInnerMap[rid]!!
+                        this.groupId = allowedGroupId
+                        this.msgCount = maxCount.toLong()
+                    }
+                }
+            }
 
             bot.launch {
                 bot.getGroup(allowedGroupId)?.sendMessage(fullMessage)

@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 /**
  * 存储每日的龙王信息
  */
-object Ryuo : LongIdTable("izumi_ryuo") {
+object RyuoModel : LongIdTable("izumi_ryuo") {
 
     val qq = long("qq").default(0)
     val nickname = text("nickname").default("")
@@ -25,13 +25,13 @@ object Ryuo : LongIdTable("izumi_ryuo") {
 
 @Suppress("unused")
 class RyuoDAO(id: EntityID<Long>) : LongEntity(id) {
-    companion object : LongEntityClass<RyuoDAO>(Ryuo)
+    companion object : LongEntityClass<RyuoDAO>(RyuoModel)
 
-    var qq by Ryuo.qq
-    var nickname by Ryuo.nickname
-    var groupId by Ryuo.groupId
-    var msgCount by Ryuo.msgCount
+    var qq by RyuoModel.qq
+    var nickname by RyuoModel.nickname
+    var groupId by RyuoModel.groupId
+    var msgCount by RyuoModel.msgCount
 
-    var createdTime by Ryuo.createdTime
-    var updatedTime by Ryuo.updatedTime
+    var createdTime by RyuoModel.createdTime
+    var updatedTime by RyuoModel.updatedTime
 }

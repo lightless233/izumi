@@ -4,7 +4,7 @@ import kotlinx.coroutines.runBlocking
 import me.lightless.izumi.config.ConfigParser
 import me.lightless.izumi.core.Dispatcher
 import me.lightless.izumi.dao.ChatMessage
-import me.lightless.izumi.dao.Ryuo
+import me.lightless.izumi.dao.RyuoModel
 import me.lightless.izumi.plugin.timer.TimerLoader
 import net.mamoe.mirai.BotFactory
 import net.mamoe.mirai.alsoLogin
@@ -85,7 +85,7 @@ class MainApp {
         transaction {
             addLogger(StdOutSqlLogger)  // 添加 sql 的日志
             SchemaUtils.create(
-                Ryuo, ChatMessage
+                RyuoModel, ChatMessage
             )
         }
     }
