@@ -8,6 +8,7 @@ import me.lightless.izumi.dao.ChatMessageDAO
 import me.lightless.izumi.dao.RyuoDAO
 import me.lightless.izumi.plugin.timer.ITimer
 import net.mamoe.mirai.Bot
+import net.mamoe.mirai.contact.Contact.Companion.sendImage
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.buildMessageChain
 import org.jetbrains.exposed.sql.and
@@ -42,10 +43,26 @@ class Ryuo : ITimer {
         logger.debug("groupNumber: $allowedGroups")
 
         while (true) {
-            // 每天早上 9 点 30 分，发送龙王数据
+            // 每天早上 10 点，发送龙王数据
             val datetime = DateTime()
-            if (datetime.hourOfDay == 9 && datetime.minuteOfHour == 30) {
+            if (datetime.hourOfDay == 10 && datetime.minuteOfHour == 0) {
                 this.doProcess(allowedGroups, bot)
+
+                // 如果是周五，发送彩蛋信息
+                if (datetime.dayOfWeek == 5) {
+                    val pic = javaClass.classLoader.getResourceAsStream("friday.jpg")
+                    for (allowedGroupId in allowedGroups) {
+                        if (pic != null) {
+                            bot.launch {
+                                bot.getGroup(allowedGroupId)?.sendImage(pic)
+                                bot.getGroup(allowedGroupId)?.sendMessage(buildMessageChain {
+                                    add("今天是周五啦，快乐摸鱼！")
+                                })
+                            }
+                        }
+                    }
+                }
+
                 // 多 sleep 5 秒，防止同一分钟内发两次消息
                 delay(65 * 1000)
             } else {
@@ -107,14 +124,14 @@ class Ryuo : ITimer {
                 yesterdayMessage += "${nicknameInnerMap[t]}($t) -> $u\n"
             }
 
-            val fullMessage = buildMessageChain {
-                add("[龙王] 恭喜 ")
+            var fullMessage = buildMessageChain {
+                add("【摸鱼助手】 恭喜 ")
             }
             for (rid in ryuoIds) {
-                fullMessage.plus(At(rid))
+                fullMessage = fullMessage.plus(At(rid))
             }
-            fullMessage.plus(buildMessageChain {
-                add(" 成为今天的龙王，快来给大家表演个喷水吧！\n")
+            fullMessage = fullMessage.plus(buildMessageChain {
+                add(" 成为今天的龙王🐉，快来给大家表演个喷水吧！🐉\n")
                 add(yesterdayMessage)
             })
 
