@@ -6,11 +6,13 @@ import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.dao.ChatMessage
 import me.lightless.izumi.dao.ChatMessageDAO
 import me.lightless.izumi.dao.RyuoDAO
+import me.lightless.izumi.dao.RyuoModel
 import me.lightless.izumi.plugin.timer.ITimer
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Contact.Companion.sendImage
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.buildMessageChain
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
@@ -95,7 +97,7 @@ class Ryuo : ITimer {
             val nicknameInnerMap = nicknameMap[msgDAO.groupId] ?: continue
 
             if (msgDAO.qq !in ryuoInnerMap.keys) {
-                ryuoInnerMap[msgDAO.qq] = 0
+                ryuoInnerMap[msgDAO.qq] = 1
             } else {
                 ryuoInnerMap[msgDAO.qq] = ryuoInnerMap[msgDAO.qq] as Long + 1
             }
@@ -135,6 +137,16 @@ class Ryuo : ITimer {
                 add(yesterdayMessage)
             })
 
+            // FIXME 这么写，会导致某天有多位龙王的时候，连任计数出错，以后再改
+            for (rid in ryuoIds) {
+                val historyCnt = this.checkHistory(rid)
+                fullMessage = fullMessage.plus(buildMessageChain {
+                    add("\n")
+                    add(At(rid))
+                    add(" 已经连任 $historyCnt 天的龙王了，加油哦~")
+                })
+            }
+
             // 存起来
             transaction {
                 for (rid in ryuoIds) {
@@ -152,6 +164,18 @@ class Ryuo : ITimer {
             }
 
         }
+    }
+
+    private fun checkHistory(todayRyuo: Long): Int {
+        val ryuoList = transaction {
+            RyuoDAO.all().orderBy(RyuoModel.createdTime to SortOrder.DESC)
+        }
+        var cnt = 1
+        ryuoList
+            .takeWhile { it.qq == todayRyuo }
+            .forEach { _ -> cnt += 1 }
+
+        return cnt
     }
 
 }
