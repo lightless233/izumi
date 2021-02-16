@@ -45,7 +45,7 @@ class Ryuo : ITimer {
         while (true) {
             // 每天早上 10 点，发送龙王数据
             val datetime = DateTime()
-            if (datetime.hourOfDay == 15 && datetime.minuteOfHour == 26) {
+            if (datetime.hourOfDay == 10 && datetime.minuteOfHour == 0) {
                 this.doProcess(allowedGroups, bot)
 
                 // 如果是周五，发送彩蛋信息
