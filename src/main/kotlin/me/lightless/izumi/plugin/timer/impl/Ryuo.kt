@@ -6,13 +6,11 @@ import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.dao.ChatMessage
 import me.lightless.izumi.dao.ChatMessageDAO
 import me.lightless.izumi.dao.RyuoDAO
-import me.lightless.izumi.dao.RyuoModel
 import me.lightless.izumi.plugin.timer.ITimer
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.contact.Contact.Companion.sendImage
 import net.mamoe.mirai.message.data.At
 import net.mamoe.mirai.message.data.buildMessageChain
-import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
@@ -47,7 +45,7 @@ class Ryuo : ITimer {
         while (true) {
             // 每天早上 10 点，发送龙王数据
             val datetime = DateTime()
-            if (datetime.hourOfDay == 10 && datetime.minuteOfHour == 0) {
+            if (datetime.hourOfDay == 15 && datetime.minuteOfHour == 26) {
                 this.doProcess(allowedGroups, bot)
 
                 // 如果是周五，发送彩蛋信息
@@ -68,7 +66,7 @@ class Ryuo : ITimer {
                 // 多 sleep 5 秒，防止同一分钟内发两次消息
                 delay(65 * 1000)
             } else {
-                delay(60 * 1000)
+                delay(10 * 1000)
             }
         }
     }
@@ -166,16 +164,14 @@ class Ryuo : ITimer {
         }
     }
 
-    private fun checkHistory(todayRyuo: Long): Int {
-        val ryuoList = transaction {
-            RyuoDAO.all().orderBy(RyuoModel.createdTime to SortOrder.DESC)
-        }
+    private fun checkHistory(todayRyuo: Long): Int = transaction {
+        val ryuoList = transaction { RyuoDAO.all().sortedByDescending { it.createdTime } }
         var cnt = 1
         ryuoList
             .takeWhile { it.qq == todayRyuo }
             .forEach { _ -> cnt += 1 }
 
-        return cnt
+        return@transaction cnt
     }
 
 }

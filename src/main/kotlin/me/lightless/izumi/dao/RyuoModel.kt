@@ -19,8 +19,6 @@ object RyuoModel : LongIdTable("izumi_ryuo") {
 
     val createdTime = datetime("created_time").default(DateTime.now())
     val updatedTime = datetime("updated_time").default(DateTime.now())
-
-    override val primaryKey: PrimaryKey = PrimaryKey(id, name = "pk")
 }
 
 @Suppress("unused")
