@@ -34,6 +34,9 @@ dbFilename: izumi.sqlite
 # ColorImage 服务需要的配置
 colorImageKey: 11223344
 
+# 天气预报需要的 key
+weatherKey: aabbccdd
+
 # SOCKS5 代理配置
 useProxy: true
 proxyIp: 127.0.0.1
