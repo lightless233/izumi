@@ -31,4 +31,7 @@ class BotConfig {
     var useProxy by Delegates.notNull<Boolean>()
     lateinit var proxyIp: String
     var proxyPort by Delegates.notNull<Int>()
+
+    // 天气预报的 key
+    lateinit var weatherKey: String
 }

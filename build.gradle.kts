@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.4.31"
     id("com.github.johnrengelman.shadow") version "5.2.0"
 }
 
@@ -15,9 +15,12 @@ repositories {
     jcenter()
 }
 
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions.useIR = true
+
 dependencies {
 
-    api("net.mamoe", "mirai-core", "2.1.0")
+    api("net.mamoe", "mirai-core", "2.4.1")
 
     implementation("org.yaml:snakeyaml:1.27")
     implementation("org.slf4j:slf4j-api:1.7.30")
