@@ -68,7 +68,7 @@ class Weather : ITimer {
             val m = datetime.minuteOfHour
 
             // 每天晚上 7:30 发送天气预报
-            if (h == 22 && m == 51) {
+            if (h == 19 && m == 30) {
                 cityList.forEach { cityId ->
                     val result = weatherService.getTomorrowWeather(cityId)
                     if (result.success) {
