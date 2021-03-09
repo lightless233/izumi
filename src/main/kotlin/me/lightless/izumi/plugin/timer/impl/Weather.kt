@@ -1,17 +1,17 @@
 package me.lightless.izumi.plugin.timer.impl
 
-import com.alibaba.fastjson.JSON
-import io.ktor.client.*
-import io.ktor.client.call.*
-import io.ktor.client.engine.okhttp.*
-import io.ktor.client.features.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
 import kotlinx.coroutines.delay
 import me.lightless.izumi.ApplicationContext
 import me.lightless.izumi.plugin.timer.ITimer
+import me.lightless.izumi.service.WeatherService
+import net.mamoe.mirai.message.data.buildMessageChain
 import org.joda.time.DateTime
 import org.slf4j.LoggerFactory
+import kotlin.collections.emptyList
+import kotlin.collections.forEach
+import kotlin.collections.listOf
+import kotlin.collections.mutableMapOf
+import kotlin.collections.set
 
 @Suppress("unused")
 class Weather : ITimer {
@@ -33,6 +33,7 @@ class Weather : ITimer {
         "101210113",    // 西湖区
         "101210114",    // 滨江区
         "101010100",    // 北京
+        "101020100",    // 上海
     )
     private val newCityList = mutableMapOf<String, String>().apply {
         this["101210101"] = "杭州市区"
@@ -55,11 +56,11 @@ class Weather : ITimer {
 
         val groupNumber = ApplicationContext.botConfig?.allowedGroups ?: emptyList()
         val apiKey = ApplicationContext.botConfig?.weatherKey
-
         if (apiKey == null) {
             this.logger.debug("[$name] weatherKey is null!")
             return
         }
+        val weatherService = WeatherService(apiKey)
 
         while (true) {
             val datetime = DateTime()
@@ -67,48 +68,26 @@ class Weather : ITimer {
             val m = datetime.minuteOfHour
 
             // 每天晚上 7:30 发送天气预报
-            if (h == 19 && m == 30) {
-                val client = HttpClient(OkHttp) {
-                    install(UserAgent) { agent = this@Weather.userAgent }
-                }
-                cityList.forEach {
-                    val url = this.buildFullApiUrl(it, apiKey)
-                    val respJsonStr = client.get<String>(url)
-                    this.logger.debug("[$name] response content: $respJsonStr")
-
-                    val jsonObj = JSON.parseObject(respJsonStr)
-                    val code = jsonObj.getString("code")
-                    if (code != "200") {
-                        this.logger.debug("[$name] response code error, code: $code")
-                        return
-                    }
-
-                    val tomorrowWeather = jsonObj.getJSONArray("daily").getJSONObject(0)
-                    val temp = "${jsonObj.getString("tempMin")}°C~${jsonObj.getString("tempMax")}°C"
-
-                    val textDay = jsonObj.getString("textDay")
-                    val textNight = jsonObj.getString("textNight")
-                    val weatherText = if (textDay == textNight) {
-                        textDay
-                    } else {
-                        "$textDay 转 $textNight"
+            if (h == 22 && m == 51) {
+                cityList.forEach { cityId ->
+                    val result = weatherService.getTomorrowWeather(cityId)
+                    if (result.success) {
+                        val weatherString = result.data
+                        this.logger.debug("weatherString: $weatherString")
+                        // 发到 qq 群里
+                        groupNumber.forEach { groupNum ->
+                            bot.getGroup(groupNum)?.sendMessage(buildMessageChain {
+                                add(newCityList[cityId] ?: "Unknown City")
+                                add(weatherString!!)
+                            })
+                        }
                     }
                 }
-
-
+                delay(1000 * 65)
             } else {
                 delay(1000 * 60)
             }
         }
 
     }
-
-    private fun buildFullApiUrl(cityId: String, apiKey: String): String {
-        return "${this.apiUrl}?key=${apiKey}&location=${cityId}"
-    }
-
-    private fun getHttpClient() {
-
-    }
-
 }

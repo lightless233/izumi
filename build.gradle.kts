@@ -35,6 +35,8 @@ dependencies {
     implementation("org.jetbrains.exposed", "exposed-jodatime", "0.28.1")
 
     implementation("com.alibaba:fastjson:1.2.75")
+
+    runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
 }
 
 
